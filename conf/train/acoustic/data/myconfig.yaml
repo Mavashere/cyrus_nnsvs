@@ -1,0 +1,18 @@
+# training set
+train_no_dev:
+  in_dir:
+  out_dir:
+
+# development set
+dev:
+  in_dir:
+  out_dir:
+
+# data loader
+num_workers: 2
+batch_size: 12
+pin_memory: true
+
+in_lf0_idx: 323
+out_lf0_idx: 180
+in_rest_idx: 23

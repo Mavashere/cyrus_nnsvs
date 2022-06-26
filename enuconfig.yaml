@@ -1,0 +1,110 @@
+# Copyright (c) 2020 Ryuichi Yamamoto
+# Copyright (c) 2020 oatsu
+
+# Is trained with ENUNU specific recipe
+trained_for_enunu:      true
+# Table (lyric -> phonemes) file path.
+table_path:             dic/DVX_jp.table
+
+defaults:
+    - hydra/job_logging: colorlog
+    - hydra/hydra_logging: colorlog
+
+verbose:                100
+
+# Setting for output WAV file.
+sample_rate:            44100
+gain_normalize:         false
+
+# How was the model trained.
+frame_period:           5
+question_path:          hed/DVX_jp.hed
+log_f0_conditioning:    true
+vibrato_scale: 1.0
+
+# Use ground truth duration or not
+# if true, time-lag and duration models will not be used.
+ground_truth_duration:  false
+
+
+# If not empty, try to search statisics in the directory
+stats_dir:              dump/M001_ALPHA/norm
+# If not empty, try to search models in the directory
+model_dir:              exp/M001_ALPHA_dynamivox_notebook
+
+acoustic:
+    question_path:      hed/DVX_jp.hed
+    checkpoint:         best_loss.pth
+    in_scaler_path:     null
+    out_scaler_path:    null
+    # model_yaml:
+    subphone_features:  coarse_coding
+    relative_f0:        false
+    post_filter:        true
+
+duration:
+    checkpoint:         best_loss.pth
+    question_path:      hed/DVX_jp.hed
+    in_scaler_path:     null
+    out_scaler_path:    null
+
+timelag:
+    question_path:      hed/DVX_jp.hed
+    checkpoint:         best_loss.pth
+    in_scaler_path:     null
+    out_scaler_path:    null
+    allowed_range:      [-150, 150]
+    allowed_range_rest: [-150, 250]
+## ENUNU-extensions paths
+# Following aliases are available
+#  - '%e' (the directory enunu.py exists in)
+#  - '%v' (the directory voicebank and enuconfig.yaml exists in)
+#  - '%u' (the directory utau.exe exists in)
+# you can run dummy script with "%e/extensions/dummy.py"
+extensions:
+    # -----------------------------------------------------
+    # UST pre-editor,
+    # which runs before converting UST to full-score-lab
+    # If null, no additional processes.
+    ust_editor: null # default: null
+    # -----------------------------------------------------
+    # Alternative converter from UST to score-LAB file.
+    # If null, ENUNU's built-in system is used.
+    ust_converter: built-in # dafault: built-in
+    # -----------------------------------------------------
+    # Score-LAB editor,
+    # which runs after converting UST to score-LAB.
+    # If null, no additional processes.
+    score_editor: null # default: null
+    # -----------------------------------------------------
+    # Calculator for timing features
+    # from timelag-LAB and duration-LAB.
+    # If null, ENUNU's built-in system is used.
+    timing_calculator: built-in
+    # -----------------------------------------------------
+    # Timing-LAB editor.
+    # Timing-LAB file is the label
+    # that have been applied with timings and durations.
+    # If null, no additional processes.
+    timing_editor: [
+            "%e/extensions/velocity_applier.py",
+            "%v/timing_auto_correct/enunu_timing_auto_correct.py",
+        ] # default: null
+    # -----------------------------------------------------
+    # Caluculator or predictor for acoustic features.
+    # If null, ENUNU's built-in system is used.
+    acoustic_calculator: built-in # default: built-in
+    # -----------------------------------------------------
+    # Acoustic CSV file editor.
+    acoustic_editor: "%e/extensions/f0_smoother.py"
+    # -----------------------------------------------------
+    # WAV generater from acoustic CSV file,
+    # instead of built-in WORLD programs.
+    # If null, ENUNU's built-in system is used.
+    wav_synthesizer: built-in # default: built-in
+    # -----------------------------------------------------
+    # WAV file editor.
+    # If null, no additional processes.
+    wav_editor: null # default: null
+    # -----------------------------------------------------
+    # -----------------------------------------------------

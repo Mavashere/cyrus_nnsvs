@@ -1,0 +1,4 @@
+name=CyrusAIVer0.6
+author=Mavashere/A0NMaster
+image=cyrus.bmp
+sample=sample.wav
